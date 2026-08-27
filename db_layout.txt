@@ -1,0 +1,50 @@
+Table molecules {
+  id SERIAL [pk]
+  formula varchar [not null] // e.g., 'H2O'
+  isotopologue varchar [not null] // e.g., '1H2-16O'
+  inchi_key varchar [unique] // Enforce uniqueness
+  slug varchar [unique]
+}
+
+Table marvel_versions {
+  id SERIAL [pk]
+  version varchar // '4.0.1'
+  release_date date
+}
+
+Table marvel_runs {
+  id SERIAL [pk]
+  molecule_id int [ref: > molecules.id]
+  version_id int [ref: > marvel_versions.id]
+  run_timestamp timestamp [default: `now()`]
+  description text
+  dataset_hash varchar // Hash of input files
+}
+
+Table source {
+  id SERIAL [pk]
+  source_tag varchar // ExoMol bib tag, e.g., '20BnTe.H2O'
+  doi varchar
+  unit varchar // 'cm-1', 'MHz'
+}
+
+Table energy_levels {
+  id BIGSERIAL [pk]
+  run_id int [ref: > marvel_runs.id]
+  energy double // High precision required
+  nqn int
+  quantum_numbers JSONB // e.g., {'v1': 0, 'Ka': 1, 'J': 0, 'parity':'e'}
+  degree int
+}
+
+Table transitions {
+  id BIGSERIAL [pk]
+  run_id int [ref: > marvel_runs.id]
+  source_id int [ref: > source.id]
+  source_number int
+  upper_level_id bigint [ref: > energy_levels.id] 
+  lower_level_id bigint [ref: > energy_levels.id]  
+  obs_freq double // Observed frequency/wavenumber
+  og_unc_freq double
+  used_unc_freq double 
+}

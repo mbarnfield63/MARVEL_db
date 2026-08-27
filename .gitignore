@@ -1,0 +1,10 @@
+# data + secrets
+/data/
+.env
+*.env
+# python
+__pycache__/
+*.pyc
+.venv/
+# postgres volume
+/pgdata/
