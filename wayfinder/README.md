@@ -1,6 +1,6 @@
 # Wayfinder tracker (GitHub Issues)
 
-This repo's issue tracker is **GitHub Issues** on `mbarnfield63/db_MARVEL`. This
+This repo's issue tracker is **GitHub Issues** on `mbarnfield63/MARVEL_db`. This
 doc is the "Wayfinding operations" reference future sessions should consult.
 
 ## Wayfinding operations
@@ -12,10 +12,10 @@ doc is the "Wayfinding operations" reference future sessions should consult.
 - **Claim** a ticket = `gh issue edit <n> --add-assignee @me`.
 - **Blocking** = GitHub's native issue-dependency relation (`blocked by` /
   `blocking`), visible in the issue sidebar. Query/set via REST:
-  `gh api repos/mbarnfield63/db_MARVEL/issues/<n>/dependencies/blocked_by`.
+  `gh api repos/mbarnfield63/MARVEL_db/issues/<n>/dependencies/blocked_by`.
 - **Unblocked** = zero open issues in that dependency list.
 - **Frontier** = open, unassigned, unblocked sub-issues of a map:
-  `gh issue list --repo mbarnfield63/db_MARVEL --json number,title,assignees,labels`,
+  `gh issue list --repo mbarnfield63/MARVEL_db --json number,title,assignees,labels`,
   cross-referenced against each issue's `issue_dependencies_summary`.
 - **Resolve** a ticket = comment the answer, `gh issue close <n>`, then append a
   one-line entry to the map issue's `## Decisions so far` section
@@ -26,4 +26,4 @@ doc is the "Wayfinding operations" reference future sessions should consult.
 
 ## Current maps
 
-- MARVEL run database — POC scaffold (issue TBD once repo exists)
+- [MARVEL run database — POC scaffold](https://github.com/mbarnfield63/MARVEL_db/issues/1)
