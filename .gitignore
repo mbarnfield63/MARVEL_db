@@ -1,5 +1,6 @@
-# data + secrets
-/data/
+# data + secrets — everything under data/ except the vendored refs
+/data/*
+!/data/refs/
 .env
 *.env
 # python

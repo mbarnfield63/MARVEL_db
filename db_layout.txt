@@ -1,50 +1,111 @@
+// db_MARVEL schema v2 — dbdiagram.io mirror of schema/schema.sql.
+// schema/schema.sql is the executable source of truth. Keep this in sync by hand.
+// Rationale: schema/DECISIONS.md
+
 Table molecules {
   id SERIAL [pk]
-  formula varchar [not null] // e.g., 'H2O'
-  isotopologue varchar [not null] // e.g., '1H2-16O'
-  inchi_key varchar [unique] // Enforce uniqueness
-  slug varchar [unique]
+  formula varchar [not null] // 'H2O'
+  isotopologue varchar [not null, unique] // ExoMol form '1H2-16O' (natural key)
+  inchi_key varchar [unique] // nullable, hand-entered when known
+  slug varchar [not null, unique] // loader-derived from isotopologue
 }
 
 Table marvel_versions {
   id SERIAL [pk]
-  version varchar // '4.0.1'
+  version varchar [not null, unique] // major version only: '3', '4', 'unknown'
   release_date date
 }
 
-Table marvel_runs {
+Table publications {
   id SERIAL [pk]
-  molecule_id int [ref: > molecules.id]
-  version_id int [ref: > marvel_versions.id]
-  run_timestamp timestamp [default: `now()`]
-  description text
-  dataset_hash varchar // Hash of input files
+  bibtex_key varchar [not null, unique] // the human handle, e.g. '20FuTeCs.H2O'
+  doi varchar [unique]
+  year smallint
+  title text
+  authors text
+  journal text
+  bibtex_raw text // verbatim entry from data/refs/marvel.bib
+  notes text
 }
 
 Table source {
   id SERIAL [pk]
-  source_tag varchar // ExoMol bib tag, e.g., '20BnTe.H2O'
+  source_tag varchar [not null, unique] // MRT tag minus trailing '.n', e.g. '32MaBa'
   doi varchar
-  unit varchar // 'cm-1', 'MHz'
+  unit varchar [not null, default: 'cm-1'] // segment file overrides if present
+}
+
+Table marvel_runs {
+  id SERIAL [pk]
+  molecule_id int [not null, ref: > molecules.id]
+  version_id int [not null, ref: > marvel_versions.id]
+  publication_id int [ref: > publications.id] // nullable: most runs unpublished
+  dataset_hash varchar [not null] // normalised sha256 of primary data file
+  completeness varchar [not null] // complete | missing_segment | output_only
+  qn_names text // text[] — ordered QN schema for this run's JSONB keys
+  description text
+  loaded_at timestamp [not null, default: `now()`]
+  load_report jsonb
+
+  indexes {
+    (molecule_id, version_id, dataset_hash) [unique]
+  }
+}
+
+Table run_files {
+  id SERIAL [pk]
+  run_id int [not null, ref: > marvel_runs.id] // ON DELETE CASCADE
+  file_role varchar [not null] // input_transitions | output_levels | segment | other
+  rel_path varchar [not null] // repo-relative; becomes object-store key later
+  sha256 varchar [not null] // true raw bytes
+  byte_size bigint [not null]
+
+  indexes {
+    (run_id, file_role) [unique]
+  }
 }
 
 Table energy_levels {
   id BIGSERIAL [pk]
-  run_id int [ref: > marvel_runs.id]
-  energy double // High precision required
-  nqn int
-  quantum_numbers JSONB // e.g., {'v1': 0, 'Ka': 1, 'J': 0, 'parity':'e'}
-  degree int
+  run_id int [not null, ref: > marvel_runs.id] // ON DELETE CASCADE
+  energy double [not null]
+  uncertainty double [not null]
+  quantum_numbers jsonb [not null] // {qn_name: token}, keys from marvel_runs.qn_names
+  qn_key text [not null] // canonical joined QN tokens; transition linking key
+  symmetry varchar // nullable
+  n_transitions int // nullable; network node degree
+  consistency_flag boolean // nullable; version-dependent
+  component_id int // nullable; spectroscopic-network component
+
+  indexes {
+    (run_id, qn_key) [unique]
+    quantum_numbers [type: gin]
+    run_id
+  }
 }
 
 Table transitions {
   id BIGSERIAL [pk]
-  run_id int [ref: > marvel_runs.id]
-  source_id int [ref: > source.id]
-  source_number int
-  upper_level_id bigint [ref: > energy_levels.id] 
-  lower_level_id bigint [ref: > energy_levels.id]  
-  obs_freq double // Observed frequency/wavenumber
-  og_unc_freq double
-  used_unc_freq double 
+  run_id int [not null, ref: > marvel_runs.id] // ON DELETE CASCADE
+  source_id int [not null, ref: > source.id]
+  source_number int [not null] // trailing '.n' of the MRT tag; resets per source
+  upper_level_id bigint [not null, ref: > energy_levels.id]
+  lower_level_id bigint [not null, ref: > energy_levels.id]
+  obs_freq double [not null] // signed (MARVEL sign convention preserved)
+  og_unc_freq double // as published; nullable
+  used_unc_freq double // as used in the solve; nullable
+  residual double // obs - calc; nullable
+  consistency_flag boolean
+  uncertainty_source varchar // original | backfilled | user_edited (MARVEL5-style only)
+  removed boolean [not null, default: false]
+  removed_reason varchar
+  note text // trailing annotation columns e.g. 'DE  BAD EHM'
+
+  indexes {
+    (run_id, source_id, source_number) [unique]
+    run_id
+    upper_level_id
+    lower_level_id
+    source_id
+  }
 }
