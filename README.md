@@ -17,10 +17,31 @@ Defined in [`db_layout.txt`](db_layout.txt) (dbdiagram.io DBML):
 `molecules`, `marvel_versions`, `marvel_runs`, `source`, `energy_levels`,
 `transitions`. See `CLAUDE.md` for a per-table summary.
 
+## Running the database
+
+Postgres in Docker, schema applied automatically on first start.
+
+```sh
+cp .env.example .env          # edit if you want non-default creds
+docker compose up -d          # starts postgres:17, runs schema/schema.sql
+docker compose ps             # wait for "healthy"
+psql "$DATABASE_URL" -c '\dt' # 8 tables
+```
+
+Connect with the `DATABASE_URL` from `.env`
+(`postgresql://marvel:marvel@localhost:5432/marvel` by default).
+
+`schema/schema.sql` is applied by the container **only when the data volume is
+empty**. After editing the schema, recreate the volume:
+
+```sh
+docker compose down -v && docker compose up -d
+```
+
 ## Status
 
-Schema drafted; no loader or database yet. The build is being charted with
-`/wayfarer`.
+Schema drafted; Docker Compose Postgres skeleton in place. No loader yet — the
+build is being charted with `/wayfinder`.
 
 ## Related repos (read-only sources)
 
