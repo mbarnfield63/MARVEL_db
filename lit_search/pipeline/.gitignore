@@ -1,0 +1,17 @@
+# Regenerable caches and scratch output - never commit these.
+# NB: gitignore has no trailing-comment syntax; keep comments on their own lines.
+
+# per-DOI Crossref/Unpaywall/Zenodo records (harvest.py)
+harvest/
+# downloaded OA PDFs, hundreds of MB (pdfscan.py)
+pdfs/
+# DOI -> ExoMol key map (bibmap.py)
+doi2key.json
+# old-schema worklist, recovered from git
+worklist.tsv
+
+digest*.txt
+pdfscan*.txt
+*_tier_rows.tsv
+needs_browser.tsv
+__pycache__/
