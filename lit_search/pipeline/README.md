@@ -7,23 +7,35 @@ probes supplementary-material assets, and reads open-access PDFs of the papers
 themselves.
 
 All three tiers are reviewed: high (1-137), medium (138-204) and low (205-309).
-**Five low-tier rows are still unresolved** - 227, 233, 242, 264, 294. Each is a
-Csaszar/Furtenbacher-group title that may hide a network inversion, none has a
-reachable OA PDF (the ELTE `edit.elte.hu` repository 404s on every handle), so
-they need the browser pass. They are absent from `decisions.py`, so `build_tsv.py`
-reports them as `unclassified`.
+**Two low-tier rows are still unresolved** - 227 (HOCl joint survey) and 264
+(critical evaluation of 14N16O line positions). Neither has an abstract in
+Crossref, OpenAlex, Semantic Scholar, Europe PMC or DataCite, no OA PDF is
+reachable (the ELTE `edit.elte.hu` repository 404s on every handle), and both
+ScienceDirect and NASA ADS answer with a CAPTCHA. They are absent from
+`decisions.py`, so `build_tsv.py` reports them as `unclassified`.
 
 Medium needed no browser sweep: the API pass plus `pdfscan.py` settled all 67 rows.
 It kept 1 (rank 144, H216O reassessment) and dropped 66 — mostly PES/line-list,
 ab initio, derived-use and measurement-source papers that cite MARVEL without
 running it.
 
-Low was a shallow title/abstract pass and kept nothing: 100 of 105 rows dropped,
-0 keeps. One new drop reason was needed - `off_topic` (7 rows), for citations that
+Low was a shallow title/abstract pass: 100 of 105 rows dropped, 3 kept, 2 left
+unresolved. One new drop reason was needed - `off_topic` (7 rows), for citations that
 are simply noise (energy harvesting, vascular imaging, a diode pump). The rest:
 measurement_source 26, method_paper 24, aggregator 14, ab_initio 12, derived_use 6,
 non_marvel_method 5, pes_linelist 2, preprint_dup 2, linelist_only 2. The tier is
 dominated by reviews, database papers and Landolt-Bornstein tables.
+
+The three keeps all came from rows whose titles hide a network inversion, so they
+needed the abstract rather than the title: 294 (ketene, 3194 validated transitions
+from 12 references inverted to 1722 levels) and the two SNAPS papers, 233 (H2-16O
+(200) parent) and 242 (H2-18O pure rotational energies). The rule settled here:
+**a network inversion of measured lines is a keep**, even when the paper also
+reports its own new measurements - what disqualifies a paper is inverting
+something other than measured transitions. All three are `pending`: their data
+links are unconfirmed, so they are not merged into `../marvel_citing_papers.tsv`
+yet. Molecular Physics and AIP both blocked the SI listing (`pubs.aip.org` also
+needs the Chrome extension to be granted that domain).
 
 `pdfscan.py` now takes an optional rank range (`python pdfscan.py 205 309`), like
 `digest.py`, so a few rows can be chased without refetching every cached PDF.
