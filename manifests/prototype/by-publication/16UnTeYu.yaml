@@ -1,0 +1,40 @@
+# FORMAT 2 MOCK — per-publication manifest
+# One folder / one file per paper = one reviewable submission.
+# Validated against manifests/schema/manifest.schema.json (to be written).
+# Files repo-relative under data/16UnTeYu/.
+
+publication:
+  bibtex_key: 16UnTeYu        # resolved against data/refs/marvel.bib; loader hard-fails if missing
+
+defaults:                      # inherited by every dataset unless overridden
+  formula: SO2
+  marvel_version: "3"
+  completeness: complete
+  n_unc_cols: 1
+  qn_names: [v1, v2, v3, J, Ka, Kc]
+  level_colmap: [n_transitions, symmetry, component_id]   # trailing cols after energy, uncertainty
+
+datasets:
+  - isotopologue: 32S-16O2
+    files:
+      input_transitions: Transitions_626.txt
+      output_levels: EnergyLevels_626.txt
+      segment: segments_626.txt
+  - isotopologue: 33S-16O2
+    files:
+      input_transitions: Transitions_636.txt
+      output_levels: EnergyLevels_636.txt
+      segment: segments_636.txt
+  - isotopologue: 34S-16O2
+    files:
+      input_transitions: Transitions_646.txt
+      output_levels: EnergyLevels_646.txt
+      segment: segments_646.txt
+
+sources:                       # transition-origin refs; seeds the global `source` table
+  - tag: 10UlBeGrAl
+    unit: cm-1
+    doi: 10.1016/j.jqsrt.2010.05.010
+  - tag: 92LaFrPiFl
+    unit: cm-1
+    doi: 10.1016/0022-2852(92)90130-A

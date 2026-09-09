@@ -1,0 +1,27 @@
+# FORMAT 2 MOCK — per-publication manifest
+# Diatomic, multi-electronic-state network. Two uncertainty columns in the trans file.
+# Level file has an extra `degree` column BETWEEN J and energy -> level_colmap can't
+# express a mid-row column, so this dataset needs an explicit column layout.
+
+publication:
+  bibtex_key: 24YuMeSy
+
+defaults:
+  formula: SO
+  marvel_version: "4"
+  completeness: complete
+  n_unc_cols: 2                       # og_unc_freq and used_unc_freq both present
+  qn_names: [State, v, ef, J]
+
+datasets:
+  - isotopologue: 32S-16O
+    files:
+      input_transitions: 32S-16O_MARVEL_trans.txt
+      output_levels: 32S-16O_MARVEL_states.txt
+      segment: 32S-16O_segments.txt
+    level_columns: [State, v, ef, J, degree, energy, uncertainty, n_transitions]
+
+sources:
+  - {tag: "03KiYa",   unit: cm-1, doi: 10.1016/S0022-2852(03)00087-0}
+  - {tag: "74Ti",     unit: cm-1}
+  - {tag: "87BuLoHa", unit: cm-1}
