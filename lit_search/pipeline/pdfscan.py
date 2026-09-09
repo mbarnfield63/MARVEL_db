@@ -24,9 +24,12 @@ def pick_pdf(rec):
 
 
 def main():
+    lo, hi = (int(sys.argv[1]), int(sys.argv[2])) if len(sys.argv) > 2 else (0, 10**9)
     for p in sorted(glob.glob(os.path.join(ROOT, "harvest", "*.json")), key=lambda x: int(os.path.basename(x)[:-5])):
         rec = json.load(open(p, encoding="utf-8"))
         rk = rec["rank"]
+        if not lo <= int(rk) <= hi:
+            continue
         u = pick_pdf(rec)
         if not u:
             continue
