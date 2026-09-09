@@ -1,0 +1,12 @@
+# HYBRID MOCK — generated, read-only. `make index` walks by-publication/*.yaml and emits this.
+# Never hand-edited. Gives you the flat one-row-per-dataset view for grep/scan without
+# giving up YAML's structure for authoring. Regenerated on every loader run.
+#
+bibtex_key	isotopologue	formula	marvel_version	completeness	n_unc_cols	qn_names	manifest
+87Toth	14N2-16O	N2O	unknown	missing_segment	1	v1,v2,l2,v3,J	by-publication/87Toth.yaml
+87Toth	14N-15N-16O	N2O	unknown	missing_segment	1	v1,v2,l2,v3,J	by-publication/87Toth.yaml
+87Toth	15N-14N-16O	N2O	unknown	missing_segment	1	v1,v2,l2,v3,J	by-publication/87Toth.yaml
+16UnTeYu	32S-16O2	SO2	3	complete	1	v1,v2,v3,J,Ka,Kc	by-publication/16UnTeYu.yaml
+16UnTeYu	33S-16O2	SO2	3	complete	1	v1,v2,v3,J,Ka,Kc	by-publication/16UnTeYu.yaml
+16UnTeYu	34S-16O2	SO2	3	complete	1	v1,v2,v3,J,Ka,Kc	by-publication/16UnTeYu.yaml
+24YuMeSy	32S-16O	SO	4	complete	2	State,v,ef,J	by-publication/24YuMeSy.yaml

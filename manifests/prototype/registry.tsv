@@ -1,0 +1,13 @@
+# FORMAT 1 MOCK — flat registry.tsv
+# One row per (publication, isotopologue) dataset. Tab-separated. '#' comments. 'NA' = absent.
+# List-valued cells use '|'. Loader resolves bibtex_key against data/refs/marvel.bib.
+# Files are repo-relative under data/<bibtex_key>/.
+#
+bibtex_key	formula	isotopologue	inchi_key	marvel_version	completeness	n_unc_cols	qn_names	input_transitions	output_levels	segment	level_colmap	description
+87Toth	N2O	14N2-16O	NA	unknown	missing_segment	1	v1|v2|l2|v3|J	87Toth/446_trans.txt	87Toth/446_levels.txt	NA	n_transitions	Toth 1987 FTIR, 446 isotopologue
+87Toth	N2O	14N-15N-16O	NA	unknown	missing_segment	1	v1|v2|l2|v3|J	87Toth/456_trans.txt	87Toth/456_levels.txt	NA	n_transitions	Toth 1987 FTIR, 456 isotopologue
+87Toth	N2O	15N-14N-16O	NA	unknown	missing_segment	1	v1|v2|l2|v3|J	87Toth/546_trans.txt	87Toth/546_levels.txt	NA	n_transitions	Toth 1987 FTIR, 546 isotopologue
+16UnTeYu	SO2	32S-16O2	NA	3	complete	1	v1|v2|v3|J|Ka|Kc	16UnTeYu/Transitions_626.txt	16UnTeYu/EnergyLevels_626.txt	16UnTeYu/segments_626.txt	n_transitions|symmetry|component_id	ExoMol SO2 MARVEL, main isotopologue
+16UnTeYu	SO2	33S-16O2	NA	3	complete	1	v1|v2|v3|J|Ka|Kc	16UnTeYu/Transitions_636.txt	16UnTeYu/EnergyLevels_636.txt	16UnTeYu/segments_636.txt	n_transitions|symmetry|component_id	ExoMol SO2 MARVEL, 636
+16UnTeYu	SO2	34S-16O2	NA	3	complete	1	v1|v2|v3|J|Ka|Kc	16UnTeYu/Transitions_646.txt	16UnTeYu/EnergyLevels_646.txt	16UnTeYu/segments_646.txt	n_transitions|symmetry|component_id	ExoMol SO2 MARVEL, 646
+24YuMeSy	SO	32S-16O	NA	4	complete	2	State|v|ef|J	24YuMeSy/32S-16O_MARVEL_trans.txt	24YuMeSy/32S-16O_MARVEL_states.txt	24YuMeSy/32S-16O_segments.txt	degree|n_transitions	SO empirical network, multi-electronic-state (X/a/b/A/B/C)

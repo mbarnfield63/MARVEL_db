@@ -1,0 +1,26 @@
+# FORMAT 2 MOCK — per-publication manifest
+# Partial-data case: no segment file published (transition origins unknown).
+
+publication:
+  bibtex_key: 87Toth
+
+defaults:
+  formula: N2O
+  marvel_version: unknown
+  completeness: missing_segment      # no segment file -> transitions carry no source DOI
+  n_unc_cols: 1
+  qn_names: [v1, v2, l2, v3, J]      # linear triatomic, Herzberg
+  level_colmap: [n_transitions]
+
+datasets:
+  - isotopologue: 14N2-16O
+    files: {input_transitions: 446_trans.txt, output_levels: 446_levels.txt}
+  - isotopologue: 14N-15N-16O
+    files: {input_transitions: 456_trans.txt, output_levels: 456_levels.txt}
+  - isotopologue: 15N-14N-16O
+    files: {input_transitions: 546_trans.txt, output_levels: 546_levels.txt}
+
+sources:
+  - tag: 87To
+    unit: cm-1
+    # no DOI: paper-internal measurements, missing_segment
