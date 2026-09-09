@@ -6,12 +6,27 @@ they live. **Nothing here downloads spectroscopic data**; it fetches metadata,
 probes supplementary-material assets, and reads open-access PDFs of the papers
 themselves.
 
-High (ranks 1-137) and medium (138-204) are done. Low (205-309, 105 rows) is not.
+All three tiers are reviewed: high (1-137), medium (138-204) and low (205-309).
+**Five low-tier rows are still unresolved** - 227, 233, 242, 264, 294. Each is a
+Csaszar/Furtenbacher-group title that may hide a network inversion, none has a
+reachable OA PDF (the ELTE `edit.elte.hu` repository 404s on every handle), so
+they need the browser pass. They are absent from `decisions.py`, so `build_tsv.py`
+reports them as `unclassified`.
 
 Medium needed no browser sweep: the API pass plus `pdfscan.py` settled all 67 rows.
 It kept 1 (rank 144, H216O reassessment) and dropped 66 — mostly PES/line-list,
 ab initio, derived-use and measurement-source papers that cite MARVEL without
 running it.
+
+Low was a shallow title/abstract pass and kept nothing: 100 of 105 rows dropped,
+0 keeps. One new drop reason was needed - `off_topic` (7 rows), for citations that
+are simply noise (energy harvesting, vascular imaging, a diode pump). The rest:
+measurement_source 26, method_paper 24, aggregator 14, ab_initio 12, derived_use 6,
+non_marvel_method 5, pes_linelist 2, preprint_dup 2, linelist_only 2. The tier is
+dominated by reviews, database papers and Landolt-Bornstein tables.
+
+`pdfscan.py` now takes an optional rank range (`python pdfscan.py 205 309`), like
+`digest.py`, so a few rows can be chased without refetching every cached PDF.
 
 ## Running a tier
 
@@ -54,7 +69,8 @@ re-running after an interruption is cheap. Everything they write is gitignored.
 - **`sweep.py`** — results of the batched browser pass over rows whose
   supplementary listings the APIs cannot reach.
 
-Both are keyed by the worklist `rank`. `decisions.py` covers ranks 1-204;
+Both are keyed by the worklist `rank`. `decisions.py` covers ranks 1-309 (less
+the five unresolved);
 `sweep.py` holds the high tier only (medium needed no sweep).
 
 ## What worked, and what to reach for first
