@@ -1,0 +1,12 @@
+[project]
+name = "db-marvel-loader"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "psycopg[binary]>=3",
+    "PyYAML",
+    "bibtexparser<2",
+]
+
+[project.scripts]
+marvel-loader = "loader.cli:main"
