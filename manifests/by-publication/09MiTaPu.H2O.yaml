@@ -1,0 +1,20 @@
+publication:
+  bibtex_key: 09MiTaPu.H2O
+
+defaults:
+  formula: H2O
+  marvel_version: unknown   # predates MARVEL formalization entirely — see FIXUPS.md
+  completeness: missing_segment
+  n_unc_cols: 1
+  qn_names: [v1v2v3, J, Ka, Kc]
+  level_colmap: [n_transitions]
+
+datasets:
+  - isotopologue: 1H-2H-18O
+    files:
+      input_transitions: transitions_transformed.txt
+      output_levels: levels_transformed.txt
+
+sources:
+  - {tag: "09MiTaPuI", unit: cm-1}
+  - {tag: "09MiTaPuII", unit: cm-1}
