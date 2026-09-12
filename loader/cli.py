@@ -84,6 +84,7 @@ def cmd_load(args: argparse.Namespace) -> int:
                     files["input_transitions"][0],
                     dataset["qn_names"],
                     dataset["n_unc_cols"],
+                    dataset.get("numeric_field_widths"),
                 )
 
             run_id = db.insert_dataset(

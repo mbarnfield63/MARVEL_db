@@ -1,0 +1,41 @@
+publication:
+  bibtex_key: 20SyMc
+
+defaults:
+  formula: CN
+  marvel_version: unknown
+  completeness: missing_segment   # no segment file provided — SI is .txt/.energies/.states + 2 PDFs
+  n_unc_cols: 1
+  qn_names: [vibronic, v, J]
+  level_colmap: [n_transitions]
+
+datasets:
+  - isotopologue: 12C-14N
+    files:
+      input_transitions: 12C-14N_MARVEL.txt
+      output_levels: 12C-14N_MARVEL.energies
+
+sources:
+  - {tag: "01LiDuLi", unit: cm-1}
+  - {tag: "04HoCiSp", unit: cm-1}
+  - {tag: "05HuCaDa", unit: cm-1}
+  - {tag: "06RaDaWa", unit: cm-1}
+  - {tag: "08CiSeKu", unit: cm-1}
+  - {tag: "09HaHaSe", unit: cm-1}
+  - {tag: "10RaWaBe", unit: cm-1}
+  - {tag: "20MAGIC", unit: cm-1}
+  - {tag: "55DoRo", unit: cm-1}
+  - {tag: "56Ca", unit: cm-1}
+  - {tag: "67WeFiRa", unit: cm-1}
+  - {tag: "70Lu", unit: cm-1}
+  - {tag: "71Lu", unit: cm-1}
+  - {tag: "73Sc", unit: cm-1}
+  - {tag: "74En", unit: cm-1}
+  - {tag: "75CoRaSe", unit: cm-1}
+  - {tag: "77DiWo", unit: cm-1}
+  - {tag: "89FuAlDa", unit: cm-1}
+  - {tag: "91DaBrAb", unit: cm-1}
+  - {tag: "92PrBe", unit: cm-1}
+  - {tag: "92PrBeFr", unit: cm-1}
+  - {tag: "92ReSuMi", unit: cm-1}
+  - {tag: "94ItKaKu", unit: cm-1}

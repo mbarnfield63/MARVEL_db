@@ -99,8 +99,8 @@ CREATE TABLE transitions (
     run_id              int NOT NULL REFERENCES marvel_runs(id) ON DELETE CASCADE,
     source_id           int NOT NULL REFERENCES source(id),
     source_number       int NOT NULL,             -- trailing '.n' of the MRT tag; resets per source
-    upper_level_id      bigint NOT NULL REFERENCES energy_levels(id),
-    lower_level_id      bigint NOT NULL REFERENCES energy_levels(id),
+    upper_level_id      bigint REFERENCES energy_levels(id),  -- null: endpoint state was never solved (floating SN component — MARVEL theory, not missing data)
+    lower_level_id      bigint REFERENCES energy_levels(id),
     obs_freq            double precision NOT NULL, -- signed (MARVEL sign convention preserved)
     og_unc_freq         double precision,          -- as published; nullable
     used_unc_freq       double precision,          -- as used in the solve; nullable
