@@ -79,9 +79,14 @@ named `quantum_numbers` JSONB.
 
 The loader matches each transition endpoint's QN tuple against `qn_key` within
 the same run to resolve `upper_level_id` / `lower_level_id`. Both FKs are
-**NOT NULL** — transitions and output levels come from the same paper in the
-same QN format. An endpoint QN not found among the output levels is a
-**hard fail** with a diff report, not a stored null state.
+**nullable** (revised during #7's real-data POC — confirmed against CO, CN,
+CaOH: a transition can cite an endpoint state that was never solved into a
+level at all, when that state's spectroscopic-network component never
+connects to the absolute energy zero-point — "floating components," per
+MARVEL's own theory, explicitly called out in 25MaElAb's text. This is not
+missing/bad data and not the same thing as the negative-frequency
+"excluded from the solve" convention — a null FK here just records "this
+state was never resolved," no solving performed by the loader).
 
 `output_only` runs have zero `transitions` rows.
 

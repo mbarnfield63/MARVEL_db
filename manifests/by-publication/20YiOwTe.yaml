@@ -1,0 +1,38 @@
+publication:
+  bibtex_key: 20YiOwTe
+
+defaults:
+  formula: CaOH
+  marvel_version: unknown
+  completeness: missing_segment   # no segment file provided/found — see loader/DESIGN.md
+  n_unc_cols: 1
+  qn_names: [vibronic, J, ef, v1, v2, L, v3, F]
+  level_colmap: [n_transitions]
+  numeric_field_widths: [14, 12]  # transitions file glues freq/unc with no space on ~6% of lines
+
+datasets:
+  - isotopologue: 40Ca-16O-1H
+    files:
+      input_transitions: CaOH_MARVEL_March2020_trans.txt
+      output_levels: CaOH_MARVEL_March2020_states.txt
+
+sources:
+  - {tag: "06DiShWa", unit: cm-1}
+  - {tag: "83HiQiHa", unit: cm-1}
+  - {tag: "84BeKixx", unit: cm-1}
+  - {tag: "85BeBrxx", unit: cm-1}
+  - {tag: "91CoLiPr", unit: cm-1}
+  - {tag: "92CoLiPr", unit: cm-1}
+  - {tag: "92JaBexx", unit: cm-1}
+  - {tag: "92LiCoxx", unit: cm-1}
+  - {tag: "92ZiBaAn", unit: cm-1}
+  - {tag: "93ScFlSt", unit: cm-1}
+  - {tag: "94CoLiPr", unit: cm-1}
+  - {tag: "95LiCoxx", unit: cm-1}
+  - {tag: "96ZiFlAn", unit: cm-1}
+  # Pseudo-transition tags (PGOPHER-reconstructed, bridging otherwise
+  # disconnected spectroscopic-network components) — no DOI, paper-internal.
+  - {tag: "PGOPHER-951-0", unit: cm-1}
+  - {tag: "PGOPHER-95LiCoxx-0-0", unit: cm-1}
+  - {tag: "PGOPHER-95LiCoxxA0-X0", unit: cm-1}
+  - {tag: "PGOPHER-96ZiFlAn0220-", unit: cm-1}

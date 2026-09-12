@@ -182,16 +182,14 @@ def insert_dataset(
         ).fetchone()
         level_id_by_qn_key[qn_key] = row[0]
 
+    unresolved_endpoints = 0
     for transition in transitions:
         upper_key = " ".join(transition.upper_qn)
         lower_key = " ".join(transition.lower_qn)
-        try:
-            upper_id = level_id_by_qn_key[upper_key]
-            lower_id = level_id_by_qn_key[lower_key]
-        except KeyError as e:
-            raise ValueError(
-                f"transition endpoint {e} has no matching energy level"
-            ) from e
+        upper_id = level_id_by_qn_key.get(upper_key)
+        lower_id = level_id_by_qn_key.get(lower_key)
+        if upper_id is None or lower_id is None:
+            unresolved_endpoints += 1
 
         source_id = source_ids[transition.source_tag]
         conn.execute(
@@ -214,7 +212,11 @@ def insert_dataset(
             ),
         )
 
-    load_report = {"n_levels": len(levels), "n_transitions": len(transitions)}
+    load_report = {
+        "n_levels": len(levels),
+        "n_transitions": len(transitions),
+        "n_unresolved_endpoints": unresolved_endpoints,
+    }
     conn.execute(
         "UPDATE marvel_runs SET load_report = %s WHERE id = %s",
         (Jsonb(load_report), run_id),

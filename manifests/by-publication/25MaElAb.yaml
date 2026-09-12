@@ -1,0 +1,87 @@
+publication:
+  bibtex_key: 25MaElAb
+
+defaults:
+  formula: CO
+  marvel_version: unknown
+  completeness: complete
+  n_unc_cols: 2
+  qn_names: [v, J]
+  level_colmap: [n_transitions]
+
+datasets:
+  - isotopologue: 12C-16O
+    files:
+      input_transitions: transitions_mrt.txt
+      output_levels: levels_mrt.txt
+      segment: segments_mrt.txt
+
+sources:
+  - {tag: "02MaBeSmRi", unit: cm-1}
+  - {tag: "02MaGoSa", unit: MHz}
+  - {tag: "02OgChLeSa", unit: cm-1}
+  - {tag: "02SwGi", unit: cm-1}
+  - {tag: "05ChOgLe", unit: cm-1}
+  - {tag: "05MiShKs", unit: cm-1}
+  - {tag: "09GeLeKlMe", unit: MHz}
+  - {tag: "13WoStMa", unit: cm-1}
+  - {tag: "14NgLaPa", unit: cm-1}
+  - {tag: "15CaKaKa", unit: cm-1}
+  - {tag: "15LiGoRo", unit: cm-1}
+  - {tag: "15MoSaKaRo", unit: MHz}
+  - {tag: "16CyWoKoZa", unit: MHz}
+  - {tag: "17EsPrPo", unit: cm-1}
+  - {tag: "17KoStWa", unit: MHz}
+  - {tag: "17TaWaZhLi", unit: cm-1}
+  - {tag: "19CiWcWo", unit: MHz}
+  - {tag: "20NiKoCh", unit: MHz}
+  - {tag: "21BiCyKo", unit: MHz}
+  - {tag: "21BoKaCa", unit: cm-1}
+  - {tag: "21PaCiCl", unit: cm-1}
+  - {tag: "24BaWoDo", unit: cm-1}
+  - {tag: "49HeNa", unit: cm-1}
+  - {tag: "54PlBlCo", unit: cm-1}
+  - {tag: "57GoCo", unit: MHz}
+  - {tag: "58RoNeTo", unit: MHz}
+  - {tag: "60RaSkEa", unit: cm-1}
+  - {tag: "64JoGo", unit: MHz}
+  - {tag: "65RaPiWi", unit: cm-1}
+  - {tag: "65WeFiRa", unit: cm-1}
+  - {tag: "70HeDeGo", unit: MHz}
+  - {tag: "70MaNiAl", unit: cm-1}
+  - {tag: "70SoSaOs", unit: MHz}
+  - {tag: "70Yardley", unit: cm-1}
+  - {tag: "74EnKiMiSp", unit: cm-1}
+  - {tag: "74KiEnRo", unit: MHz}
+  - {tag: "74MaMa", unit: cm-1}
+  - {tag: "74RoNa", unit: cm-1}
+  - {tag: "76ToClTe", unit: cm-1}
+  - {tag: "77Dixon", unit: cm-1}
+  - {tag: "79Guelachv", unit: cm-1}
+  - {tag: "83GuDeFaUr", unit: cm-1}
+  - {tag: "83PoPeJeWe", unit: MHz}
+  - {tag: "85BrTo", unit: cm-1}
+  - {tag: "85WeHiMa", unit: MHz}
+  - {tag: "85WiWiWi", unit: MHz}
+  - {tag: "86BoDeDeLa", unit: MHz}
+  - {tag: "87HiWeMa", unit: MHz}
+  - {tag: "87NoRaDiEv", unit: MHz}
+  - {tag: "89ScEvVaJe", unit: MHz}
+  - {tag: "90MaWeJe", unit: MHz}
+  - {tag: "90ScWeMa", unit: MHz}
+  - {tag: "91FaGuSaGr", unit: cm-1}
+  - {tag: "91GeWuDa", unit: MHz}
+  - {tag: "92BeTrSu", unit: MHz}
+  - {tag: "92VaEv", unit: MHz}
+  - {tag: "92YoSa", unit: cm-1}
+  - {tag: "94GeSaWaUr", unit: MHz}
+  - {tag: "95BeLeKlWi", unit: MHz}
+  - {tag: "95Evenson", unit: MHz}
+  - {tag: "96MaGuDoNi", unit: MHz}
+  - {tag: "97PiGu", unit: cm-1}
+  - {tag: "97WaSaMeGe", unit: MHz}
+  - {tag: "97WiBeKlSc", unit: MHz}
+  - {tag: "98DeBeSmRi", unit: cm-1}
+  - {tag: "99HeSiMo", unit: cm-1}
+  - {tag: "61RaEaRaWi", unit: cm-1}
+  - {tag: "21WaHuLi", unit: kHz}

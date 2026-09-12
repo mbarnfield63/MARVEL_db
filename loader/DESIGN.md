@@ -22,11 +22,23 @@ reference — not an import dependency). Changes from the original:
   this loader stores published input, it doesn't solve.
 - Tag extraction: regex, not last-token — this loader's files carry trailing
   flag/annotation columns (e.g. `note` in the `transitions` table) that
-  MARVEL5's inputs don't.
+  MARVEL5's inputs don't. The tag regex splits at the trailing digit run
+  (optional dot before it) rather than assuming a fixed shape — covers
+  `49HeNa.1`, `06DiShWa1` (no dot), and synthetic/pseudo-transition tags
+  like `PGOPHER-95LiCoxx-0-0.1` (seen in 20YiOwTe, used to bridge otherwise
+  disconnected spectroscopic-network components — same idea as C3's
+  `23MaQiDoPi_EH`). Each such synthetic tag still needs its own
+  `sources[].tag` entry in the manifest, typically with no `doi`.
 - QN split point is **not inferred**. The manifest already declares
   `qn_names`, so `nqn = len(qn_names)` is known upfront; the parser validates
   each line's QN-token count against `2 * nqn` and hard-fails on mismatch
   (see QN schema below).
+- No leading Iso/Name columns before `freq` (unlike MARVEL5's inputs) — real
+  MARVEL transitions files, whether author-supplied or an IOP MRT export,
+  start the line with the frequency. Confirmed against all 5 POC papers'
+  real files during #7; the original assumption (freq at token 2) was only
+  ever checked against a synthetic fixture and silently misparsed every real
+  file.
 
 Output-levels file: one parser, always driven by a resolved `level_columns`
 list. When the manifest gives `level_colmap` instead of `level_columns`, the

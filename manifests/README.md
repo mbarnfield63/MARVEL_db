@@ -50,6 +50,7 @@ Required means required *after* the defaults merge.
 | `marvel_version` | yes | String, matched against seeded `marvel_versions`. `unknown` when the paper does not say. |
 | `completeness` | yes | `complete` \| `missing_segment` \| `output_only` — decides which files are required. |
 | `n_unc_cols` | yes | `1` or `2`. Not autodetected. `1` → `og_unc_freq = used_unc_freq`. |
+| `numeric_field_widths` | no | Fixed character widths for the leading `freq` + uncertainty column(s) in `input_transitions`, `len == 1 + n_unc_cols`. Only needed when those columns are right-justified without a guaranteed separator, so a short uncertainty value can glue onto the frequency with no space (e.g. `15961.7230.0246092`). Omit for normally space-delimited files. |
 | `qn_names` | yes | Ordered list, zipped onto the even-split QN tokens. **No inference fallback** — absent = hard fail. |
 | `level_colmap` | no | Trailing level-file columns after `energy`, `uncertainty`. Omit if there are none. |
 | `level_columns` | no | Full explicit ordered level-file layout. Overrides `level_colmap`; use it when an extra column sits mid-row (e.g. `degree` before `energy` in 24YuMeSy). |
@@ -57,7 +58,7 @@ Required means required *after* the defaults merge.
 | `files.output_levels` | yes | A manifest with no output file is invalid. |
 | `files.segment` | see below | |
 | `sources[].tag` | yes | Segment-file tag, e.g. `10UlBeGrAl`. |
-| `sources[].unit` | yes | `cm-1` \| `MHz` |
+| `sources[].unit` | yes | Free text, whatever the segment file says — `cm-1`, `MHz`, `kHz` all seen in practice (25MaElAb's segment file has all three). |
 | `sources[].doi` | no | Absent for pre-DOI or paper-internal measurements. |
 
 Files required per `completeness`:
