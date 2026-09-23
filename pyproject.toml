@@ -6,6 +6,8 @@ dependencies = [
     "psycopg[binary]>=3",
     "PyYAML",
     "bibtexparser<2",
+    "fastapi",
+    "uvicorn",
 ]
 
 [project.scripts]
