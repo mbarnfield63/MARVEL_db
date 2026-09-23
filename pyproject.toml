@@ -8,6 +8,7 @@ dependencies = [
     "bibtexparser<2",
     "fastapi",
     "uvicorn",
+    "psycopg-pool>=3.3.3",
 ]
 
 [project.scripts]
