@@ -38,6 +38,19 @@ empty**. After editing the schema, recreate the volume:
 docker compose down -v && docker compose up -d
 ```
 
+## API
+
+Read-only HTTP API (FastAPI) in `api/`, connecting as the SELECT-only
+`marvel_readonly` role via `API_DATABASE_URL`:
+
+```sh
+uv run --env-file .env uvicorn api.main:app   # docs at http://localhost:8000/docs
+uv run python -m api.check                    # smoke check against it
+```
+
+`/molecules` → `/molecules/{slug}/runs` → `/runs/{id}/levels|transitions|files/{file_role}`,
+plus `/publications`, `/sources`, `/marvel_versions`. Design: issues #18/#19.
+
 ## Status
 
 Schema drafted; Docker Compose Postgres skeleton in place. No loader yet — the
