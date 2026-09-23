@@ -70,15 +70,22 @@ def get_or_create_publication(conn: psycopg.Connection, pub: dict) -> int:
 def get_or_create_source(
     conn: psycopg.Connection, tag: str, unit: str, doi: str | None
 ) -> int:
+    """The unit belongs to the source: an existing tag keeps its unit, and a
+    manifest declaring a different one hard-fails rather than relabelling
+    another run's transitions."""
     row = conn.execute(
         """
         INSERT INTO source (source_tag, doi, unit)
         VALUES (%s, %s, %s)
-        ON CONFLICT (source_tag) DO UPDATE SET unit = EXCLUDED.unit
-        RETURNING id
+        ON CONFLICT (source_tag) DO UPDATE SET source_tag = EXCLUDED.source_tag
+        RETURNING id, unit
         """,
         (tag, doi, unit),
     ).fetchone()
+    if row[1] != unit:
+        raise ValueError(
+            f"source {tag!r} is already stored as {row[1]!r}, manifest says {unit!r}"
+        )
     return row[0]
 
 
