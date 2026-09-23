@@ -1,2 +1,3 @@
 # Docker/WSL consumes these on a /mnt/c checkout — CRLF breaks env_file + shell.
 * text=auto eol=lf
+graphify-out/graph.json merge=graphify

@@ -9,3 +9,7 @@ __pycache__/
 .venv/
 # postgres volume
 /pgdata/
+graphify-out/
+.claude/
+# ingestion manifests — local working files, not checked in
+/manifests/by-publication/*.yaml

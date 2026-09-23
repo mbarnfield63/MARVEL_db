@@ -178,3 +178,14 @@ Raw `schema/schema.sql`, mounted into the Postgres container's
 is pre-1.0 and there is no production data. Recreate the volume on change.
 Adopt Alembic post-POC with the then-current schema as the baseline.
 `db_layout.txt` is kept in sync by hand as the dbdiagram.io visual.
+
+## Read-only API role (2026-09-22, task, not grilled)
+
+Added `marvel_readonly`: `CONNECT` + `USAGE` on `public` + `SELECT` on all
+current and future tables, via a second init script (`zz_api_role.sh`,
+alphabetically after `schema.sql` so the tables it grants against already
+exist). Separate from `POSTGRES_USER` (the loader's write role) so the
+future API backend (see [db_MARVEL public API — architecture decisions](https://github.com/mbarnfield63/MARVEL_db/issues/18))
+can never write, regardless of bugs in its own code. Password lives in
+`MARVEL_READONLY_PASSWORD` (`.env`, gitignored) — not in `schema.sql` itself,
+which is committed.
