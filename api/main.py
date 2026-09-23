@@ -9,21 +9,125 @@ Docs: /docs (Swagger UI), /openapi.json
 """
 
 import os
+from contextlib import asynccontextmanager
+from datetime import date, datetime
 from pathlib import Path
 from typing import Literal
 
-import psycopg
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse
 from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
+from psycopg_pool import ConnectionPool
+from pydantic import BaseModel
 
 # run_files.rel_path is repo-relative (schema/DECISIONS.md "run_files").
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FILE_ROLES = ("input_transitions", "output_levels", "segment", "other")
 MAX_LIMIT = 10_000
+FileRole = Literal[FILE_ROLES]
+
+
+# ---------------------------------------------------------------------------
+# Response models: the documented shape of every JSON endpoint (/openapi.json)
+# ---------------------------------------------------------------------------
+
+
+class Molecule(BaseModel):
+    slug: str
+    formula: str
+    isotopologue: str
+    inchi_key: str | None
+
+
+class MarvelVersion(BaseModel):
+    version: str
+    release_date: date | None
+
+
+class Publication(BaseModel):
+    bibtex_key: str
+    doi: str | None
+    year: int | None
+    title: str | None
+    authors: str | None
+    journal: str | None
+    isotopologues: list[str]
+
+
+class PublicationDetail(Publication):
+    bibtex_raw: str | None
+    notes: str | None
+
+
+class Source(BaseModel):
+    source_tag: str
+    doi: str | None
+    unit: str
+
+
+class Run(BaseModel):
+    id: int
+    molecule: str
+    version: str
+    dataset_hash: str
+    completeness: Literal["complete", "missing_segment", "output_only"]
+    publication: str | None
+    description: str | None
+    loaded_at: datetime
+    n_levels: int | None
+    n_transitions: int | None
+    files: dict[FileRole, int]
+
+
+class RunDetail(Run):
+    qn_names: list[str]
+    load_report: dict | None
+
+
+class Level(BaseModel):
+    id: int
+    energy: float
+    uncertainty: float
+    quantum_numbers: dict[str, str]
+    qn_key: str
+    symmetry: str | None
+    n_transitions: int | None
+    consistency_flag: bool | None
+    component_id: int | None
+
+
+class Transition(BaseModel):
+    id: int
+    source_tag: str
+    source_number: int
+    upper_level_id: int | None
+    upper: str | None
+    lower_level_id: int | None
+    lower: str | None
+    obs_freq: float
+    og_unc_freq: float | None
+    used_unc_freq: float | None
+    residual: float | None
+    consistency_flag: bool | None
+    uncertainty_source: str | None
+    removed: bool
+    removed_reason: str | None
+    note: str | None
+
+
+pool = ConnectionPool(os.environ["API_DATABASE_URL"], kwargs={"row_factory": dict_row}, open=False)
+
+
+@asynccontextmanager
+async def lifespan(app):
+    pool.open()
+    yield
+    pool.close()
+
 
 app = FastAPI(
+    lifespan=lifespan,
     title="db_MARVEL API",
     description="Read-only access to MARVEL runs: molecules, runs, energy levels, "
     "transitions, raw published files, and their literature sources.",
@@ -32,8 +136,7 @@ app = FastAPI(
 
 
 def db():
-    # ponytail: one connection per request, add psycopg_pool if load demands it
-    with psycopg.connect(os.environ["API_DATABASE_URL"], row_factory=dict_row) as conn:
+    with pool.connection() as conn:
         yield conn
 
 
@@ -48,14 +151,14 @@ def one_or_404(row, what: str):
 # ---------------------------------------------------------------------------
 
 
-@app.get("/molecules")
+@app.get("/molecules", response_model=list[Molecule])
 def list_molecules(conn=Depends(db)):
     return conn.execute(
         "SELECT slug, formula, isotopologue, inchi_key FROM molecules ORDER BY formula, isotopologue"
     ).fetchall()
 
 
-@app.get("/molecules/{slug}")
+@app.get("/molecules/{slug}", response_model=Molecule)
 def get_molecule(slug: str, conn=Depends(db)):
     row = conn.execute(
         "SELECT slug, formula, isotopologue, inchi_key FROM molecules WHERE slug = %s", (slug,)
@@ -63,7 +166,7 @@ def get_molecule(slug: str, conn=Depends(db)):
     return one_or_404(row, "molecule")
 
 
-@app.get("/marvel_versions")
+@app.get("/marvel_versions", response_model=list[MarvelVersion])
 def list_versions(conn=Depends(db)):
     return conn.execute("SELECT version, release_date FROM marvel_versions ORDER BY version").fetchall()
 
@@ -75,14 +178,14 @@ PUBLICATION_COLS = """
 """
 
 
-@app.get("/publications")
+@app.get("/publications", response_model=list[Publication])
 def list_publications(conn=Depends(db)):
     return conn.execute(
         f"SELECT {PUBLICATION_COLS} FROM publications p ORDER BY p.year DESC NULLS LAST, p.bibtex_key"
     ).fetchall()
 
 
-@app.get("/publications/{bibtex_key}")
+@app.get("/publications/{bibtex_key}", response_model=PublicationDetail)
 def get_publication(bibtex_key: str, conn=Depends(db)):
     row = conn.execute(
         f"SELECT {PUBLICATION_COLS}, p.bibtex_raw, p.notes FROM publications p WHERE p.bibtex_key = %s",
@@ -91,7 +194,7 @@ def get_publication(bibtex_key: str, conn=Depends(db)):
     return one_or_404(row, "publication")
 
 
-@app.get("/sources")
+@app.get("/sources", response_model=list[Source])
 def list_sources(conn=Depends(db)):
     return conn.execute("SELECT source_tag, doi, unit FROM source ORDER BY source_tag").fetchall()
 
@@ -118,7 +221,7 @@ RUN_FROM = """
 """
 
 
-@app.get("/molecules/{slug}/runs")
+@app.get("/molecules/{slug}/runs", response_model=list[Run])
 def list_runs(
     slug: str,
     version: str | None = None,
@@ -145,12 +248,12 @@ def get_run_row(run_id: int, conn):
     return one_or_404(row, "run")
 
 
-@app.get("/runs/{run_id}")
+@app.get("/runs/{run_id}", response_model=RunDetail)
 def get_run(run_id: int, conn=Depends(db)):
     return get_run_row(run_id, conn)
 
 
-@app.get("/runs/{run_id}/levels")
+@app.get("/runs/{run_id}/levels", response_model=list[Level])
 def list_levels(
     run_id: int,
     request: Request,
@@ -179,7 +282,7 @@ def list_levels(
     ).fetchall()
 
 
-@app.get("/runs/{run_id}/transitions")
+@app.get("/runs/{run_id}/transitions", response_model=list[Transition])
 def list_transitions(
     run_id: int,
     source_tag: str | None = None,
@@ -212,8 +315,8 @@ def list_transitions(
     ).fetchall()
 
 
-@app.get("/runs/{run_id}/files/{file_role}", response_class=FileResponse)
-def get_file(run_id: int, file_role: Literal[FILE_ROLES], conn=Depends(db)):
+@app.api_route("/runs/{run_id}/files/{file_role}", methods=["GET", "HEAD"], response_class=FileResponse)
+def get_file(run_id: int, file_role: FileRole, conn=Depends(db)):
     """The original published file, byte for byte, as text/plain. This is the
     bulk-export path: shown inline in a browser, save-as to download."""
     row = conn.execute(

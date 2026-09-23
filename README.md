@@ -49,12 +49,32 @@ uv run python -m api.check                    # smoke check against it
 ```
 
 `/molecules` → `/molecules/{slug}/runs` → `/runs/{id}/levels|transitions|files/{file_role}`,
-plus `/publications`, `/sources`, `/marvel_versions`. Design: issues #18/#19.
+plus `/publications`, `/sources`, `/marvel_versions`. Every JSON endpoint has a
+response model in `/openapi.json`; file links also answer `HEAD`. Design: issues #18/#19.
+
+## Loading data
+
+One YAML manifest per publication in `manifests/by-publication/`, raw files in
+`data/<bibtex_key>/` (see `manifests/README.md`):
+
+```sh
+uv run --env-file .env marvel-loader validate manifests/by-publication/25MaElAb.yaml
+uv run --env-file .env marvel-loader load manifests/by-publication/25MaElAb.yaml
+uv run --env-file .env marvel-loader list
+```
+
+Re-loading the same data under the same version is skipped, not duplicated.
 
 ## Status
 
-Schema drafted; Docker Compose Postgres skeleton in place. No loader yet — the
-build is being charted with `/wayfinder`.
+- Postgres schema, loader, and read-only API working.
+- 7 runs loaded from 6 publications, covering 6 isotopologues: 12C-16O, 13C-16O2,
+  1H-2H-18O, 1H-16O-35Cl, 12C-14N, and 31P-14N (2 runs).
+- All runs are version `unknown` for now; versions get filled in on a full
+  re-load once version parsing exists for each source.
+- Public website: [`MARVELdb_online`](https://github.com/mbarnfield63/MARVELdb_online),
+  a static Astro site built from this API. Not live yet: the API needs a
+  public HTTPS host first.
 
 ## Related repos (read-only sources)
 

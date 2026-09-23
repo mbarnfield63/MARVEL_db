@@ -7,7 +7,7 @@
 import json
 import sys
 from urllib.error import HTTPError
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 BASE = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8000"
 
@@ -37,6 +37,8 @@ assert get(f"/runs/{rid}/levels?qn.not_a_qn=1")[0] == 422
 role, size = next(iter(run["files"].items()))
 status, body = get(f"/runs/{rid}/files/{role}")
 assert status == 200 and len(body) == size
+with urlopen(Request(BASE + f"/runs/{rid}/files/{role}", method="HEAD")) as r:
+    assert r.status == 200 and int(r.headers["content-length"]) == size and not r.read()
 
 assert get("/runs/999999")[0] == 404
 assert all("isotopologues" in p for p in get("/publications")[1])
