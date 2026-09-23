@@ -26,4 +26,6 @@ doc is the "Wayfinding operations" reference future sessions should consult.
 
 ## Current maps
 
-- [MARVEL run database — POC scaffold](https://github.com/mbarnfield63/MARVEL_db/issues/1)
+- [MARVEL run database — POC scaffold](https://github.com/mbarnfield63/MARVEL_db/issues/1) — destination reached, no open frontier.
+- [db_MARVEL public API — architecture decisions](https://github.com/mbarnfield63/MARVEL_db/issues/18) — destination reached 2026-09-22 (`api/` build not yet started).
+- [MARVEL-online website — architecture decisions](https://github.com/mbarnfield63/MARVEL_db/issues/9) — destination reached 2026-09-23 (website build not yet started).

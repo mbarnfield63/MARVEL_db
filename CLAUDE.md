@@ -26,22 +26,22 @@ them.
 ## Operating Rules
 
 ### 1. Initialize
-When the user says **"get up to speed"**, immediately read the Obsidian state
-file at `C:/Obsidian/Claude_State/db_MARVEL.md` to reconstruct full context.
+When the user says **"get up to speed"**, invoke the `get-up-to-speed` skill. It reads the Obsidian state
+file at `C:/Code/Obsidian/PhD/db_MARVEL/db_MARVEL_state.md` to reconstruct full context.
 
 ### 2. Log & Save
-When reaching a milestone or when the user says **"save state"**:
-1. Overwrite the Obsidian state file (`C:/Obsidian/Claude_State/db_MARVEL.md`)
+When reaching a milestone or when the user says **"save state"**, invoke the `save-state` skill:
+1. Overwrite the Obsidian state file (`C:/Code/Obsidian/PhD/db_MARVEL/db_MARVEL_state.md`)
    with a clean update (see Rule 3 format).
 2. Append a summary of work done to the log file
-   (`C:/Obsidian/Logs/db_MARVEL Log.md`).
+   (`C:/Code/Obsidian/PhD/db_MARVEL/db_MARVEL Log.md`).
 3. Once schema/loader code exists and a `graphify-out/` is present, run
    `graphify update .` so the knowledge graph reflects the session's changes.
 
-Never change any other files within `C:/Obsidian/`.
+Never change any other files within `C:/Code/Obsidian/`.
 
 ### 3. Obsidian State File Format
-When writing to `C:/Obsidian/Claude_State/db_MARVEL.md`, always overwrite with:
+When writing to `C:/Code/Obsidian/PhD/db_MARVEL/db_MARVEL_state.md`, always overwrite with:
 
 ```
 # db_MARVEL — Claude State
@@ -97,8 +97,8 @@ All read-only. Nothing here writes back to these repos.
 | `C:\Code\bib\MARVEL\*.bib` | BibTeX for `source` rows (DOIs, tags) |
 
 Obsidian context for the siblings (background reading, do not edit):
-`C:/Obsidian/Claude_State/MARVEL{5, GNN, scraping}.md` and the matching
-`C:/Obsidian/Logs/*.md`.
+`C:/Code/Obsidian/PhD/MARVEL5/MARVEL5_state.md`, `C:/Code/Obsidian/PhD/MARVEL GNN/MARVEL GNN_state.md`,
+`C:/Code/Obsidian/PhD/MARVEL scraping/MARVEL scraping_state.md`, and each project's matching `... Log.md`.
 
 ## Directory Structure
 
@@ -111,3 +111,13 @@ db_MARVEL\
 
 Schema/loader/DB code does not exist yet — the build is charted next via
 `/wayfarer`.
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
