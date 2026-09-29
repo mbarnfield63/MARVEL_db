@@ -13,5 +13,17 @@ services:
       timeout: 5s
       retries: 10
 
+  api:
+    build: .
+    environment:
+      API_DATABASE_URL: postgresql://marvel_readonly:${MARVEL_READONLY_PASSWORD}@db:5432/${POSTGRES_DB}
+    volumes:
+      - ./data:/app/data:ro   # raw published files served by /runs/{id}/files
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   pgdata:

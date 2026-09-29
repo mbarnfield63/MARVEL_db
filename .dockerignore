@@ -1,0 +1,7 @@
+data/
+pgdata/
+.venv/
+graphify-out/
+lit_search/
+.git/
+.env
