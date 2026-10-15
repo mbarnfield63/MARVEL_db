@@ -116,7 +116,8 @@ class Transition(BaseModel):
     note: str | None
 
 
-pool = ConnectionPool(os.environ["API_DATABASE_URL"], kwargs={"row_factory": dict_row}, open=False)
+pool = ConnectionPool(os.environ["API_DATABASE_URL"], kwargs={"row_factory": dict_row}, max_size=20, open=False)
+# max_size: the site build fetches every run in parallel; 4 (the default) times out.
 
 
 @asynccontextmanager
