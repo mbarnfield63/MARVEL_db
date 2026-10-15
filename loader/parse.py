@@ -14,7 +14,9 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-TAG_RE = re.compile(r"^(.+?)\.?(\d+)$")
+# Optional trailing annotation glued onto the number (`18CeKaMoKa.33-relab`,
+# `86RiBeDe.611?typo`, seen in the CO2 papers) is kept as the note.
+TAG_RE = re.compile(r"^(.+?)\.?(\d+)([-?][^\d\s]\S*)?$")
 
 
 @dataclass
@@ -123,7 +125,8 @@ def parse_transitions(
             unc = _parse_unc(tokens[1])
             og_unc = used_unc = unc
 
-        note_tokens = tokens[tag_idx + 1 :]
+        note_tokens = [tag_match.group(3)] if tag_match.group(3) else []
+        note_tokens += tokens[tag_idx + 1 :]
 
         out.append(
             ParsedTransition(
