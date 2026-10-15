@@ -68,10 +68,11 @@ Re-loading the same data under the same version is skipped, not duplicated.
 ## Status
 
 - Postgres schema, loader, and read-only API working.
-- 7 runs loaded from 6 publications, covering 6 isotopologues: 12C-16O, 13C-16O2,
-  1H-2H-18O, 1H-16O-35Cl, 12C-14N, and 31P-14N (2 runs).
-- All runs are version `unknown` for now; versions get filled in on a full
-  re-load once version parsing exists for each source.
+- 31 runs loaded from 19 publications, covering 29 isotopologues: CO (6), CO2 (12),
+  VO (2 runs), PN (2 runs), H3+, H2D+, D2H+, AlO, TiO, SO, CN, HD18O, and HOCl.
+- 11 runs are v4 (CO, VO, TiO, H3+ family), AlO is v3, and the other 19 are
+  version `unknown`. Versions get filled in on a full re-load once version
+  parsing exists for each source.
 - Public website: [`MARVELdb_online`](https://github.com/mbarnfield63/MARVELdb_online),
   a static Astro site built from this API. Not live yet: the API needs a
   public HTTPS host first.
